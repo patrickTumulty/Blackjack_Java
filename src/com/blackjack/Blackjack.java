@@ -97,11 +97,13 @@ public class Blackjack {
 
             mDealer.wonHand();
 
+        } else if (mPlayer.getScore() == mDealer.getScore()){
+            System.out.println("It's a tie!");
+
         } else {
             System.out.println(mPlayer.getName() + " Wins");
 
             mPlayer.wonHand();
-
         }
     }
 
