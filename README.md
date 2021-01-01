@@ -17,7 +17,7 @@ Your hand
 * [ 9 ♠ ]
 * [ 6 ♦ ]
 Score : 15
-[H]it or [S]tay? : h
+[H]it or [S]tay? : s
 
 Rusty: 'Stay'
 
