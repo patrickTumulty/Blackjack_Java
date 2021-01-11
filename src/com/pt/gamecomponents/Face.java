@@ -1,4 +1,4 @@
-package com.blackjack;
+package com.pt.gamecomponents;
 
 public enum Face {
     TWO("2"),

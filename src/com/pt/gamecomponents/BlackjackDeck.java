@@ -1,4 +1,4 @@
-package com.blackjack;
+package com.pt.gamecomponents;
 
 import java.util.LinkedList;
 import java.util.Queue;

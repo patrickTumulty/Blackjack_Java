@@ -1,4 +1,4 @@
-package com.blackjack;
+package com.pt.gamecomponents;
 //♠ ♥ ♦ ♣
 
 public enum Suit {

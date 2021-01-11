@@ -1,4 +1,8 @@
-package com.blackjack;
+package com.pt.game;
+
+import com.pt.gamecomponents.BlackjackDeck;
+import com.pt.gamecomponents.Card;
+import com.pt.gamecomponents.Player;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -11,7 +15,7 @@ public class Blackjack {
     private final String[] dealerNames = { "Basher", "Danny", "Reuben", "Saul", "Linus", "Rusty" };
 
 
-    Blackjack() {
+    public Blackjack() {
         scanner = new Scanner(System.in);
     }
 
@@ -76,14 +80,12 @@ public class Blackjack {
         return true;
     }
 
-    // Gradle <--- Industry Standard
-    // New Gradle Project
-    // Mavin
-    // Guava - Google Java Extensions
 
     private void printResults() {
         printBanner();
         printDealerPlayerScore();
+
+        // TODO: Clean up this method to avoid long conditional statement
 
         if (player.getScore() == 21) {
             System.out.println("!BLACKJACK! " + player.getName() + " Wins");

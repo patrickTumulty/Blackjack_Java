@@ -1,6 +1,6 @@
-package com.blackjack;
+package com.pt;
 
-
+import com.pt.game.Blackjack;
 
 public class Main {
 

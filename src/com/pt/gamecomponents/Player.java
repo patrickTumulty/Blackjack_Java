@@ -1,4 +1,4 @@
-package com.blackjack;
+package com.pt.gamecomponents;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,7 @@ public class Player {
     private int handsWon = 0;
     private ArrayList<Card> hand;
 
-    Player(String name) {
+    public Player(String name) {
         this.name = name;
         hand = new ArrayList<Card>();
     }
