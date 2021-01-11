@@ -1,50 +1,41 @@
 package com.blackjack;
 
 public class Card {
-    protected String mSuit;
-    protected String mFace;
-    protected int mValue;
+    private final Suit suit;
+    private final Face face;
+    private int value;
 
-    Card(String suit, String face, int value) {
-        mSuit = suit;
-        mFace = face;
-        mValue = value;
+    Card(Suit suit, Face face, int value) {
+        this.suit = suit;
+        this.face = face;
+        this.value = value;
     }
 
     public void setValue(int value) {
-        mValue = value;
+        this.value = value;
     }
 
     public int getValue() {
-        return mValue;
+        return value;
     }
 
-    public String getSuit() {
-        return mSuit;
+    public Suit getSuit() {
+        return suit;
     }
 
-    public String getFace() {
-        return mFace;
+    public Face getFace() {
+        return face;
     }
 
-    public int add(Card card) {
-        return mValue + card.getValue();
+    public String getColor() {
+        if (suit.equals(Suit.SPADES) || suit.equals(Suit.CLUBS)) {
+            return "Black";
+        }
+        return "Red";
     }
 
-    public boolean faceEquals(Card card) {
-        return mFace.equals(card.getFace());
-    }
-
-    public boolean greaterThan(Card card) {
-        return mValue > card.getValue();
-    }
-
-    public boolean lessThan(Card card) {
-        return mValue < card.getValue();
-    }
-
-    public String asString() {
-        if (mFace.toString().length() == 2) return "* [" + mFace + " " + mSuit + " ]";
-        return "* [ " + mFace + " " + mSuit + " ]";
+    @Override
+    public String toString() {
+        return String.format("[%2s %s ]", face, suit);
     }
 }

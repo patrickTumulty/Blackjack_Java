@@ -4,58 +4,63 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Blackjack {
-    private BlackjackDeck mGameDeck;
-    private Player mPlayer;
-    private Player mDealer;
-    private final Scanner mScanner;
-    private final String[] mDealerNames = { "Basher", "Danny", "Reuben", "Saul", "Linus", "Rusty" };
+    private BlackjackDeck gameDeck;
+    private Player player;
+    private Player dealer;
+    private final Scanner scanner;
+    private final String[] dealerNames = { "Basher", "Danny", "Reuben", "Saul", "Linus", "Rusty" };
 
 
     Blackjack() {
-
-        mScanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
     }
 
     public void gameLoop() {
-        String input = "";
-        while (true) {
+        do {
             handLoop();
-            System.out.print("[P]lay again? or [L]eave the table?");
-            input = mScanner.nextLine();
-            if (input.equalsIgnoreCase("p")) {
-                mGameDeck.resetDeck();
-                mPlayer.clearHand();
-                mDealer.clearHand();
-            } else if (input.equalsIgnoreCase("l")) {
-                break;
-            }
-        }
+        } while (promptPlayAgain());
         printHeader();
-        System.out.println(mPlayer.getName() + "(" + mPlayer.getHandsWon() + ") " + mDealer.getName() + "(" + mDealer.getHandsWon() + ")" );
+        printDealerPlayerHandsWon();
+    }
+
+    private boolean promptPlayAgain() {
+        System.out.print("[P]lay again? or [L]eave the table? : ");
+        if (scanner.nextLine().equalsIgnoreCase("p")) {
+            gameDeck.resetDeck();
+            player.clearHand();
+            dealer.clearHand();
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    private void printDealerPlayerHandsWon() {
+        System.out.println("[*] == HANDS WON == [*]");
+        System.out.printf("%s: %d\n", player.getName(), player.getHandsWon());
+        System.out.printf("%s: %d\n", dealer.getName(), dealer.getHandsWon());
+    }
+
+    private void printDealerPlayerScore() {
+        System.out.println("[*] ===  SCORE  === [*]");
+        System.out.printf("%s: %d\n", player.getName(), player.getScore());
+        System.out.printf("%s: %d\n", dealer.getName(), dealer.getScore());
     }
 
     private void handLoop() {
         initialDeal();
-        while (mPlayer.getScore() < 21) {
-
+        while (player.getScore() < 21) {
             printDealerAndPlayerHands();
             System.out.print("[H]it or [S]tay? : ");
-
-            String decision = mScanner.nextLine();
+            String decision = scanner.nextLine();
             if (decision.equalsIgnoreCase("h")) {
                 dealCards(1, 0);
             } else if (decision.equalsIgnoreCase("s")) {
-                while (mDealer.getScore() < 17) {
-                    dealCards(0, 1);
-                }
-                if (mDealer.getScore() >= 17) {
-                    System.out.println(mDealer.getName() + ": 'Stay'");
-                    break;
-                }
+                if (dealersTurn()) break;
             }
         }
 
-        if (mDealer.getHand().size() == 1) {
+        if (dealer.getHand().size() == 1) {
             dealCards(0, 1);
         }
 
@@ -64,63 +69,81 @@ public class Blackjack {
 
     }
 
+    private boolean dealersTurn() {
+        while (dealer.getScore() < 17) {
+            dealCards(0, 1);
+        }
+        return true;
+    }
 
+    // Gradle <--- Industry Standard
+    // New Gradle Project
+    // Mavin
+    // Guava - Google Java Extensions
 
     private void printResults() {
-        System.out.println("[*]    HAND OVER    [*]");
-        System.out.println("[*] === ♠ ♥ ♦ ♣ === [*]");
-        System.out.println(mPlayer.getName() + "(" + mPlayer.getScore() + ")" + " " + mDealer.getName() + "(" + mDealer.getScore() + ")");
+        printBanner();
+        printDealerPlayerScore();
 
-        if (mPlayer.getScore() == 21) {
-            System.out.println("!BLACKJACK! " + mPlayer.getName() + " Wins");
+        if (player.getScore() == 21) {
+            System.out.println("!BLACKJACK! " + player.getName() + " Wins");
 
-            mPlayer.wonHand();
+            player.wonHand();
 
-        } else if (mDealer.getScore() == 21) {
-            System.out.println("!BLACKJACK! " + mDealer.getName() + " Wins");
+        } else if (dealer.getScore() == 21) {
+            System.out.println("!BLACKJACK! " + dealer.getName() + " Wins");
             System.out.println("\nYou Lose.");
 
-            mDealer.wonHand();
+            dealer.wonHand();
 
-        } else if (mPlayer.getScore() > mDealer.getScore() && mPlayer.getScore() < 21 && mDealer.getScore() < 21) {
-            System.out.println(mPlayer.getName() + " Wins");
+        } else if (player.getScore() > dealer.getScore() && player.getScore() < 21 && dealer.getScore() < 21) {
+            System.out.println(player.getName() + " Wins");
 
-            mPlayer.wonHand();
+            player.wonHand();
 
-        } else if (mPlayer.getScore() < mDealer.getScore() && mPlayer.getScore() < 21 && mDealer.getScore() < 21){
-            System.out.println(mDealer.getName() + " Wins");
+        } else if (player.getScore() < dealer.getScore() && player.getScore() < 21 && dealer.getScore() < 21){
+            System.out.println(dealer.getName() + " Wins");
 
-            mDealer.wonHand();
+            dealer.wonHand();
 
-        } else if (mPlayer.getScore() > 21) {
-            System.out.println(mDealer.getName() + " Wins");
+        } else if (player.getScore() > 21) {
+            System.out.println(dealer.getName() + " Wins");
 
-            mDealer.wonHand();
+            dealer.wonHand();
 
-        } else if (mPlayer.getScore() == mDealer.getScore()){
+        } else if (player.getScore() == dealer.getScore()){
             System.out.println("It's a tie!");
 
         } else {
-            System.out.println(mPlayer.getName() + " Wins");
+            System.out.println(player.getName() + " Wins");
 
-            mPlayer.wonHand();
+            player.wonHand();
         }
+    }
+
+    private void printBanner() {
+        System.out.println("\n[*] === ♠ ♥ ♦ ♣ === [*]\n");
     }
 
     public void newGame() {
         printHeader();
-        mGameDeck = new BlackjackDeck(1);
+        gameDeck = new BlackjackDeck(1);
 
+        promptForPlayerName();
+        sleep(1);
+        getAndPrintDealerName();
+        sleep(1);
+    }
+
+    private void getAndPrintDealerName() {
+        dealer = new Player(dealerNames[new Random().nextInt(dealerNames.length)]);
+        System.out.println("The dealers name is " + dealer.getName());
+    }
+
+    private void promptForPlayerName() {
         System.out.print("Enter Name: ");
-        mPlayer = new Player(mScanner.nextLine());
-        System.out.println("Hello " + mPlayer.getName() + ".");
-
-        sleep(1);
-
-        mDealer = new Player(mDealerNames[new Random().nextInt(mDealerNames.length)]);
-        System.out.println("The dealers name is " + mDealer.getName());
-
-        sleep(1);
+        player = new Player(scanner.nextLine());
+        System.out.println("Hello " + player.getName() + ".");
     }
 
     private void printHeader() {
@@ -130,68 +153,47 @@ public class Blackjack {
 
     }
 
-    private void clearScreen() {
-        try
-        {
-            // This seems to not work. Stackoverflow says "might not work in IDE"
-            String os = System.getProperty("os.name");
-            if (os.contains("Windows"))
-            {
-                Runtime.getRuntime().exec("cls");
-            }
-            else
-            {
-                Runtime.getRuntime().exec("clear");
-            }
-        }
-        catch (Exception e)
-        {
-
-        }
-    }
-
-    private void hackyClearScreen() {
-        for (int i = 0; i < 50; i++) System.out.print("\n");
-    }
-
     public void printDealerAndPlayerHands() {
-        System.out.println("\n[*] === ♠ ♥ ♦ ♣ === [*]");
+        printBanner();
         printDealersHand();
         System.out.print("\n");
         printPlayersHand();
     }
 
     public void printDealersHand() {
-        System.out.println(mDealer.getName() + "'s hand");
-        if (mDealer.getHand().size() == 1) {
-            System.out.println(mDealer.getHand().get(0).asString());
-            System.out.println("* [?????]");
-            System.out.println("Score : " + mDealer.getScore());
+        System.out.printf("[*] = %s's HAND = [*]\n", dealer.getName());
+        if (dealer.getHand().size() == 1) {
+            System.out.printf("%s [?????]\nScore : %d\n", dealer.getHand().get(0), dealer.getScore());
         } else {
-            for (Card card : mDealer.getHand()) {
-                System.out.println(card.asString());
-            }
-            System.out.println("Score : " + mDealer.getScore());
+            printCardsDoubleColumn(this.dealer);
         }
     }
 
     public void printPlayersHand() {
-        System.out.println("Your hand");
-        for (Card card : mPlayer.getHand()) {
-            System.out.println(card.asString());
-        }
-        System.out.println("Score : " + mPlayer.getScore());
+        System.out.println("[*] == YOUR HAND == [*]");
+        printCardsDoubleColumn(this.player);
     }
+
+    private void printCardsDoubleColumn(Player player) {
+        int columnCounter = 0;
+        for (Card card : player.getHand()) {
+            columnCounter = (columnCounter + 1) % 3;
+            if (columnCounter == 0) System.out.print("\n");
+            System.out.printf("%s ", card);
+        }
+        System.out.println("\nScore : " + player.getScore());
+    }
+
     public void initialDeal() {
-        mPlayer.addCardToHand(mGameDeck.drawTopCard());
-        mDealer.addCardToHand(mGameDeck.drawTopCard());
-        mPlayer.addCardToHand(mGameDeck.drawTopCard());
+        player.addCardToHand(gameDeck.drawTopCard());
+        dealer.addCardToHand(gameDeck.drawTopCard());
+        player.addCardToHand(gameDeck.drawTopCard());
 
     }
 
     private void dealCards(int cards2player, int cards2dealer) {
-        for (int i = 0; i < cards2player; i++) mPlayer.addCardToHand(mGameDeck.drawTopCard());
-        for (int i = 0; i < cards2dealer; i++) mDealer.addCardToHand(mGameDeck.drawTopCard());
+        for (int i = 0; i < cards2player; i++) player.addCardToHand(gameDeck.drawTopCard());
+        for (int i = 0; i < cards2dealer; i++) dealer.addCardToHand(gameDeck.drawTopCard());
     }
 
     private void sleep(double seconds) {

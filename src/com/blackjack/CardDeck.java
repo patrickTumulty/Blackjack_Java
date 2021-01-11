@@ -4,79 +4,71 @@ package com.blackjack;
 import java.util.*;
 
 public class CardDeck {
-    protected Queue<Card> mDeck;
-    protected int mNumberOfCards;
-    protected boolean mJokersInDeck = false;
+    protected Queue<Card> deck;
+    protected int numberOfCards;
+    protected boolean jokersInDeck = false;
 
     CardDeck() {
+
+    }
+
+    protected void initialize() {
         makeDeck();
+        numberOfCards = deck.size();
         shuffleDeck();
     }
 
     protected void makeDeck() {
-        mNumberOfCards = 52;
-        mDeck = new LinkedList<Card>();
-//        String[] suits = { "Clubs", "Spades", "Diamonds", "Hearts" };
-        String[] suits = { "♠", "♥", "♦", "♣" };
-        int counter = 0;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 2; j < 11; j++) {
-                mDeck.add(new Card(suits[i], String.valueOf(j), j));
-                counter++;
-            }
-        }
-        String[] royalty = { "K", "Q", "J", "A" };
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (Objects.equals(royalty[j], "A")) {
-                    mDeck.add(new Card(suits[i], royalty[j], 11));
-                } else {
-                    mDeck.add(new Card(suits[i], royalty[j], 10));
+        deck = new LinkedList<Card>();
+        for (Suit suit: Suit.values()) {
+            if (suit != Suit.JOKER) {
+                for (Face face: Face.values()) {
+                    if (face != Face.JOKER)
+                        deck.add(new Card(suit, face, face.getValue()));
                 }
-                counter++;
             }
         }
     }
 
     protected void setAcesValue(int value) {
-        for (Card card : mDeck) {
-            if (card.getFace().equals("Ace")) {
+        for (Card card : deck) {
+            if (card.getFace().equals(Face.ACE)) {
                 card.setValue(value);
             }
         }
     }
 
     protected void addJokers() {
-            mDeck.add(new Card("Joker", "Joker", 0));
-            mDeck.add(new Card("Joker", "Joker", 0));
+        deck.add(new Card(Suit.JOKER, Face.JOKER, Face.JOKER.getValue()));
+        deck.add(new Card(Suit.JOKER, Face.JOKER, Face.JOKER.getValue()));
     }
 
     public void shuffleDeck() {
         Random rand = new Random();
-        Card[] tempDeck = mDeck.toArray(new Card[mNumberOfCards]);
-        for (int i = 0; i < mNumberOfCards; i++) {
-            int randSwapIndex = rand.nextInt(mNumberOfCards);
+        Card[] tempDeck = deck.toArray(new Card[numberOfCards]);
+        for (int i = 0; i < numberOfCards; i++) {
+            int randSwapIndex = rand.nextInt(numberOfCards);
             Card temp = tempDeck[randSwapIndex];
             tempDeck[randSwapIndex] = tempDeck[i];
             tempDeck[i] = temp;
         }
-        mDeck = new LinkedList<Card>(Arrays.asList(tempDeck));
+        deck = new LinkedList<Card>(Arrays.asList(tempDeck));
     }
 
     public Queue<Card> getDeck() {
-        return mDeck;
+        return deck;
     }
 
     public int getDeckSize() {
-        return mNumberOfCards;
+        return numberOfCards;
     }
 
     public Card revealTopCard() {
-        return mDeck.peek();
+        return deck.peek();
     }
 
     public Card drawTopCard() {
-        return mDeck.poll();
+        return deck.poll();
     }
 
     public void resetDeck() {
@@ -84,9 +76,6 @@ public class CardDeck {
         shuffleDeck();
 
     }
-
-
-
 }
 
 

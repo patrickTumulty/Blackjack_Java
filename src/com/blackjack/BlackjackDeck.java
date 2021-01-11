@@ -3,15 +3,31 @@ package com.blackjack;
 import java.util.LinkedList;
 import java.util.Queue;
 
-class BlackjackDeck extends CardDeck {
-    BlackjackDeck(int numberOfDecks) {
-        mNumberOfDecks = numberOfDecks;
-        makeDeck(mNumberOfDecks);
+public class BlackjackDeck extends CardDeck {
+    private int numberOfDecks;
+
+    public BlackjackDeck(int numberOfDecks) {
+        this.numberOfDecks = numberOfDecks;
+        initialize();
+    }
+
+    @Override
+    protected void initialize() {
+        makeDeck();
+        addDecks(numberOfDecks);
+        numberOfCards = deck.size();
         shuffleDeck();
     }
 
-    protected void makeDeck(int numberOfDecks) {
-        super.makeDeck();
+    @Override
+    public void resetDeck() {
+        makeDeck();
+        addDecks(numberOfDecks);
+        numberOfCards = deck.size();
+        shuffleDeck();
+    }
+
+    protected void addDecks(int numberOfDecks) {
 
         // Input Checking
         if (numberOfDecks > 8) {
@@ -20,18 +36,9 @@ class BlackjackDeck extends CardDeck {
             numberOfDecks = 1;
         }
 
-        Queue<Card> temp = new LinkedList<Card>(mDeck);
+        Queue<Card> temp = new LinkedList<Card>(deck);
         for (int i = 0; i < (numberOfDecks - 1); i++) {
-            mDeck.addAll(temp);
+            deck.addAll(temp);
         }
-        mNumberOfCards = mDeck.size();
     }
-
-    public void resetDeck() {
-        makeDeck(mNumberOfDecks);
-        shuffleDeck();
-
-    }
-
-    protected int mNumberOfDecks;
 }

@@ -1,51 +1,50 @@
 package com.blackjack;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class Player {
+    private String name;
+    private int score = 0;
+    private int handsWon = 0;
+    private ArrayList<Card> hand;
+
     Player(String name) {
-        mName = name;
-        mHand = new ArrayList<Card>();
+        this.name = name;
+        hand = new ArrayList<Card>();
     }
 
     public String getName() {
-        return mName;
+        return name;
     }
 
     public int getScore() {
-        return mScore;
+        return score;
     }
 
-    public int getHandsWon() { return mHandsWon; }
+    public int getHandsWon() { return handsWon; }
 
     public void addToScore(int points) {
-        mScore += points;
+        score += points;
     }
 
     public void addCardToHand(Card card) {
         addToScore(card.getValue());
-        mHand.add(card);
+        hand.add(card);
     }
 
     public void clearHand() {
-        mHand.clear();
-        mScore = 0;
+        hand.clear();
+        score = 0;
     }
 
     public ArrayList<Card> getHand() {
-        return mHand;
+        return hand;
     }
 
     public void wonHand() {
-        mHandsWon++;
+        handsWon++;
     }
 
-    private String mName;
-    private int mScore = 0;
-    private int mHandsWon = 0;
-    private ArrayList<Card> mHand;
+
 
 }
