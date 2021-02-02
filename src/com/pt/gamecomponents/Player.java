@@ -45,6 +45,24 @@ public class Player {
         handsWon++;
     }
 
+    public int winsAgainst(Player player) {
+        if (winningConditions(player)) {
+            return 1;
+        } else if (this.getScore() == player.getScore()) {
+            return 0;
+        }
+        return -1;
+    }
+
+    public boolean winningConditions(Player player) {
+        if (this.getScore() <= 21 && player.getScore() > 21) {
+            return true;
+        } else if (this.getScore() > player.getScore() && this.getScore() < 21 && player.getScore() < 21) {
+            return true;
+        }
+        return false;
+    }
+
 
 
 }

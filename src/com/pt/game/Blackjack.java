@@ -53,10 +53,12 @@ public class Blackjack {
 
     private void handLoop() {
         initialDeal();
+        hackyClearScreen();
         while (player.getScore() < 21) {
             printDealerAndPlayerHands();
             System.out.print("[H]it or [S]tay? : ");
             String decision = scanner.nextLine();
+            hackyClearScreen();
             if (decision.equalsIgnoreCase("h")) {
                 dealCards(1, 0);
             } else if (decision.equalsIgnoreCase("s")) {
@@ -82,45 +84,21 @@ public class Blackjack {
 
 
     private void printResults() {
-        printBanner();
         printDealerPlayerScore();
 
-        // TODO: Clean up this method to avoid long conditional statement
-
-        if (player.getScore() == 21) {
-            System.out.println("!BLACKJACK! " + player.getName() + " Wins");
-
-            player.wonHand();
-
-        } else if (dealer.getScore() == 21) {
-            System.out.println("!BLACKJACK! " + dealer.getName() + " Wins");
-            System.out.println("\nYou Lose.");
-
-            dealer.wonHand();
-
-        } else if (player.getScore() > dealer.getScore() && player.getScore() < 21 && dealer.getScore() < 21) {
-            System.out.println(player.getName() + " Wins");
-
-            player.wonHand();
-
-        } else if (player.getScore() < dealer.getScore() && player.getScore() < 21 && dealer.getScore() < 21){
-            System.out.println(dealer.getName() + " Wins");
-
-            dealer.wonHand();
-
-        } else if (player.getScore() > 21) {
-            System.out.println(dealer.getName() + " Wins");
-
-            dealer.wonHand();
-
-        } else if (player.getScore() == dealer.getScore()){
-            System.out.println("It's a tie!");
-
-        } else {
-            System.out.println(player.getName() + " Wins");
-
-            player.wonHand();
+        int playerWins = player.winsAgainst(dealer);
+        switch (playerWins) {
+            case 1 -> {
+                System.out.println(player.getName() + " Wins!");
+                player.wonHand();
+            }
+            case 0 -> System.out.println("It's a tie...");
+            case -1 -> {
+                System.out.println(dealer.getName() + " Wins!");
+                dealer.wonHand();
+            }
         }
+
     }
 
     private void printBanner() {
@@ -163,7 +141,7 @@ public class Blackjack {
     }
 
     public void printDealersHand() {
-        System.out.printf("[*] = %s's HAND = [*]\n", dealer.getName());
+        System.out.printf("[*] = %s's HAND = [*]\n\n", dealer.getName());
         if (dealer.getHand().size() == 1) {
             System.out.printf("%s [?????]\nScore : %d\n", dealer.getHand().get(0), dealer.getScore());
         } else {
@@ -172,7 +150,7 @@ public class Blackjack {
     }
 
     public void printPlayersHand() {
-        System.out.println("[*] == YOUR HAND == [*]");
+        System.out.println("[*] == YOUR HAND == [*]\n");
         printCardsDoubleColumn(this.player);
     }
 
@@ -204,6 +182,12 @@ public class Blackjack {
         }
         catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
+        }
+    }
+
+    private void hackyClearScreen() {
+        for (int i = 0; i < 50; i++) {
+            System.out.println();
         }
     }
 }
